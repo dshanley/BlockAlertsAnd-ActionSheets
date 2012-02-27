@@ -67,7 +67,8 @@ static BlockBackground *_sharedInstance = nil;
 
 - (id)init
 {
-    self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    self = [super initWithFrame:[[UIApplication sharedApplication] keyWindow].rootViewController.view.bounds];
     if (self) {
         self.windowLevel = UIWindowLevelStatusBar;
         self.hidden = YES;
@@ -78,13 +79,38 @@ static BlockBackground *_sharedInstance = nil;
 }
 
 - (void)addToMainWindow:(UIView *)view
-{
+{   
     if (self.hidden)
     {
         _previousKeyWindow = [[[UIApplication sharedApplication] keyWindow] retain];
         self.alpha = 0.0f;
         self.hidden = NO;
         self.userInteractionEnabled = YES;
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        if (orientation == UIInterfaceOrientationLandscapeRight) 
+        {
+            CGAffineTransform transform = _previousKeyWindow.transform;
+            
+            // Rotate the view 90 degrees around its new center point.
+            transform = CGAffineTransformRotate(transform, (M_PI / 2.0));
+            self.transform = transform;
+        } else if (orientation == UIInterfaceOrientationLandscapeLeft) 
+        {
+            CGAffineTransform transform = _previousKeyWindow.transform;
+                        
+            // Rotate the view 90 degrees around its new center point.
+            transform = CGAffineTransformRotate(transform, -(M_PI / 2.0));
+            self.transform = transform;
+        } 
+        else {
+            self.transform = CGAffineTransformIdentity;    
+        }
+        //adjust the content frame for the current orientation
+        CGRect contentFrame = _previousKeyWindow.rootViewController.view.frame;
+        self.frame = contentFrame;
+        // Set the center point of the view to the center point of the window's content area.
+        self.center = CGPointMake(CGRectGetMidX(contentFrame), CGRectGetMidY(contentFrame));
+        
         [self makeKeyWindow];
     }
     
