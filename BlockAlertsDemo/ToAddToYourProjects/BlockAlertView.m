@@ -43,7 +43,18 @@ static UIFont *buttonFont = nil;
 {
     if ((self = [super init]))
     {
-        CGRect frame = [[UIApplication sharedApplication] keyWindow].rootViewController.view.bounds;
+        CGRect frame = CGRectZero;
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        if (orientation == UIInterfaceOrientationLandscapeRight) 
+        {
+            frame = CGRectMake(20, 0, 1004, 748);
+        } else if (orientation == UIInterfaceOrientationLandscapeLeft) 
+        {
+            frame = CGRectMake(0, 0, 1004, 768);
+        } 
+        else {
+            frame = CGRectMake(0, 20, 768, 1004);
+        }
         frame.origin.x = floorf((frame.size.width - background.size.width) * 0.5);
         frame.size.width = background.size.width;
         

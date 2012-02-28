@@ -86,6 +86,7 @@ static BlockBackground *_sharedInstance = nil;
         self.alpha = 0.0f;
         self.hidden = NO;
         self.userInteractionEnabled = YES;
+        CGRect contentFrame = CGRectZero;
         UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
         if (orientation == UIInterfaceOrientationLandscapeRight) 
         {
@@ -94,6 +95,7 @@ static BlockBackground *_sharedInstance = nil;
             // Rotate the view 90 degrees around its new center point.
             transform = CGAffineTransformRotate(transform, (M_PI / 2.0));
             self.transform = transform;
+            contentFrame = CGRectMake(0, 0, 768, 1024);
         } else if (orientation == UIInterfaceOrientationLandscapeLeft) 
         {
             CGAffineTransform transform = _previousKeyWindow.transform;
@@ -101,14 +103,15 @@ static BlockBackground *_sharedInstance = nil;
             // Rotate the view 90 degrees around its new center point.
             transform = CGAffineTransformRotate(transform, -(M_PI / 2.0));
             self.transform = transform;
+            contentFrame = CGRectMake(0, 0, 768, 1024);
         } 
         else {
-            self.transform = CGAffineTransformIdentity;    
+            self.transform = CGAffineTransformIdentity;  
+            contentFrame = CGRectMake(0, 20, 768, 1004);
         }
         //adjust the content frame for the current orientation
-        CGRect contentFrame = _previousKeyWindow.rootViewController.view.frame;
         self.frame = contentFrame;
-        // Set the center point of the view to the center point of the window's content area.
+        // Set the center point of the view to the  center point of the window's content area.
         self.center = CGPointMake(CGRectGetMidX(contentFrame), CGRectGetMidY(contentFrame));
         
         [self makeKeyWindow];
